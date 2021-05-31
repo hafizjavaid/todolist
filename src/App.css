@@ -205,7 +205,7 @@
 }
 .Calendar .header .btns span:hover {
   background-color: #ebebeb;
-  transition: all 300ms ease-in-out;
+  transition: background 300ms ease-in-out;
 }
 .Calendar .items {
   padding: 0.5rem;
@@ -254,7 +254,7 @@
 }
 .Projects .header .btns span:hover {
   background-color: #ebebeb;
-  transition: all 300ms ease-in-out;
+  transition: background 300ms ease-in-out;
 }
 .Projects .items {
   padding: 0.5rem;
@@ -371,6 +371,7 @@
   opacity: 0.9;
 
   padding: 0 0.5rem 0.5rem 0.5rem;
+
   overflow-y: auto;
 }
 .Todos .selected-project {
@@ -391,6 +392,13 @@
 .Todo .todo-container {
   display: flex;
   align-items: center;
+}
+.Todo .todo-container .check-todo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 15px;
 }
 .Todo .todo-container span {
   cursor: pointer;
