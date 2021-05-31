@@ -6,10 +6,12 @@ function Sidebar({ children }) {
 
   const sidebarRef = useRef();
 
+   // eslint-disable-next-line
   useEffect(() => {
     document.addEventListener("click", handleClick);
 
     return () => document.removeEventListener("click", handleClick);
+     // eslint-disable-next-line
   }, []);
 
   const handleClick = (e) => {

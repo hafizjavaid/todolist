@@ -1,49 +1,42 @@
 import React, { useState, useContext, useEffect } from "react";
 import TodoForm from "./TodoForm";
 import { TodoContext } from "../context";
-import  moment from 'moment';
+import moment from "moment";
 import firebase from "../firebase/index";
 
 function EditTodo() {
   // CONTEXT
   const { selectedProject, selectedTodo, projects } = useContext(TodoContext);
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [day, setDay] = useState(new Date());
   const [time, setTime] = useState(new Date());
   const [todoProject, setTodoProject] = useState(selectedProject);
 
+  useEffect(() => {
+    if (selectedTodo) {
+      setText(selectedTodo.text);
 
-  useEffect(()=>{
-   
-    if(selectedTodo)
-    {
-      setText(selectedTodo.text)
-
-      setDay(moment(selectedTodo.date, 'MM/DD/YYYY'))
-      setTime(moment(selectedTodo.time, 'hh:mm A'))
-      setTodoProject(selectedTodo.projectName)
+      setDay(moment(selectedTodo.date, "MM/DD/YYYY"));
+      setTime(moment(selectedTodo.time, "hh:mm A"));
+      setTodoProject(selectedTodo.projectName);
     }
+  }, [selectedTodo]);
 
-  },[selectedTodo])
-
-  useEffect(()=>{
-
-    firebase
-    .firestore()
-    .collection('todos')
-    .doc(selectedTodo.id)
-    .update({
-
-      text,
-      date: moment(day).format('MM/DD/YYYY'),
-      day: moment(day).format('d'),
-      time: moment(time).format('hh:mm A'),
-      projectName: todoProject
-
-
-    })
-
-  }, [text, day, time, todoProject])
+  useEffect(() => {
+    if (selectedTodo) {
+      firebase
+        .firestore()
+        .collection("todos")
+        .doc(selectedTodo.id)
+        .update({
+          text,
+          date: moment(day).format("MM/DD/YYYY"),
+          day: moment(day).format("d"),
+          time: moment(time).format("hh:mm A"),
+          projectName: todoProject,
+        });
+    }
+  }, [text, day, time, todoProject, selectedTodo]);
   function handleSubmit(e) {}
   return (
     <div>

@@ -9,6 +9,8 @@ import {
 import moment from "moment";
 import firebase from "../firebase/index";
 import { TodoContext } from "../context";
+import { useSpring, animated, useTransition } from "react-spring";
+
 function Todo({ todo }) {
   const [hover, setHover] = useState(false);
 
@@ -18,12 +20,10 @@ function Todo({ todo }) {
   const handleDelete = (todo) => {
     deleteTodo(todo);
 
-    if(selectedTodo === todo)
-    {
-        setSelectedTodo(undefined)
+    if (selectedTodo === todo) {
+      setSelectedTodo(undefined);
     }
-
-  }
+  };
   const deleteTodo = (todo) => {
     firebase.firestore().collection("todos").doc(todo.id).delete();
   };
@@ -49,26 +49,44 @@ function Todo({ todo }) {
     firebase.firestore().collection("todos").add(repeatedTodo);
   };
 
+  const fadeIn = useSpring({
+    from: {
+      marginTop: "-12px",
+      opacity: 0,
+    },
+    to: {
+      marginTop: "0px",
+      opacity: 1,
+    },
+  });
+
+  const checkTransition = useTransition(todo.checked, {
+    from: { position: "absolute", transform: "scale(0)" },
+    enter: { transform: "scale(1)" },
+    leave: { transform: "scale(0)" },
+  });
+
   return (
-    <div className="Todo">
+    <animated.div style={fadeIn} className="Todo">
       <div
         className="todo-container"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
       >
         <div className="check-todo" onClick={() => checkTodo(todo)}>
-          {todo.checked ? (
-            <span className="checked">
-              <CheckCircleFill color="#bebebe" />
-            </span>
-          ) : (
-            <span className="unchecked">
-              <Circle color={todo.color} />
-            </span>
+          {checkTransition((props, checked) =>
+            checked ? (
+              <animated.span style={props} className="checked">
+                <CheckCircleFill color="#bebebe" />
+              </animated.span>
+            ) : (
+              <animated.span style={props} className="unchecked">
+                <Circle color={todo.color} />
+              </animated.span>
+            )
           )}
         </div>
-        <div className="text"
-             onClick={()=> setSelectedTodo(todo)}>
+        <div className="text" onClick={() => setSelectedTodo(todo)}>
           <p style={{ color: todo.checked ? "#bebebe" : "#000000" }}>
             {todo.text}
           </p>
@@ -92,7 +110,7 @@ function Todo({ todo }) {
           )}
         </div>
       </div>
-    </div>
+    </animated.div>
   );
 }
 
